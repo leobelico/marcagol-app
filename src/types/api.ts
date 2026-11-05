@@ -18,6 +18,11 @@ export interface Organization {
   logo: string | null;
   /** Lo manda el servidor desde la versión con tarjetas; puede faltar. */
   stats?: OrganizationStats;
+  /** Contacto de la liga (organizador y redes); puede faltar. */
+  contactName?: string | null;
+  instagram?: string | null;
+  facebook?: string | null;
+  whatsapp?: string | null;
 }
 
 export interface Tenant {

@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   Animated,
   Image,
+  Linking,
   Pressable,
   Text,
   useWindowDimensions,
@@ -581,6 +582,60 @@ const ATAJOS: { tab: string; label: string; icono: keyof typeof Ionicons.glyphMa
   { tab: "goleo", label: "Goleo", icono: "football" },
 ];
 
+// Enlaces de las redes de la liga. En el admin se puede escribir el
+// usuario (@ligarinos) o pegar el enlace completo.
+function enlaceInstagram(v: string) {
+  if (/^https?:\/\//i.test(v)) return v;
+  const usuario = v.trim().replace(/^@/, "").replace(/^(www\.)?instagram\.com\//i, "");
+  return `https://instagram.com/${usuario}`;
+}
+function enlaceFacebook(v: string) {
+  if (/^https?:\/\//i.test(v)) return v;
+  if (/facebook\.com|fb\.com/i.test(v)) return `https://${v.trim()}`;
+  return `https://facebook.com/${v.trim().replace(/^@/, "")}`;
+}
+function enlaceWhatsapp(v: string) {
+  let n = v.replace(/\D/g, "");
+  if (n.length === 10) n = `52${n}`; // número de México sin lada de país
+  return `https://wa.me/${n}`;
+}
+
+function ContactoLiga({ liga }: { liga: Organization }) {
+  const styles = useStyles();
+  const redes = [
+    liga.instagram && { key: "ig", icono: "logo-instagram" as const, url: enlaceInstagram(liga.instagram) },
+    liga.facebook && { key: "fb", icono: "logo-facebook" as const, url: enlaceFacebook(liga.facebook) },
+    liga.whatsapp && { key: "wa", icono: "logo-whatsapp" as const, url: enlaceWhatsapp(liga.whatsapp) },
+  ].filter((r): r is { key: string; icono: "logo-instagram" | "logo-facebook" | "logo-whatsapp"; url: string } => !!r);
+  if (!liga.contactName && redes.length === 0) return null;
+  return (
+    <View style={styles.contacto}>
+      {!!liga.contactName && (
+        <View style={styles.contactoQuien}>
+          <Ionicons name="person-circle" size={18} color="rgba(255,255,255,.9)" />
+          <View style={{ flexShrink: 1 }}>
+            <Text style={styles.contactoEtiqueta}>ORGANIZA</Text>
+            <Text style={styles.contactoNombre} numberOfLines={1}>{liga.contactName}</Text>
+          </View>
+        </View>
+      )}
+      <View style={styles.contactoRedes}>
+        {redes.map((r) => (
+          <Pressable
+            key={r.key}
+            hitSlop={6}
+            accessibilityLabel={`Abrir ${r.key === "ig" ? "Instagram" : r.key === "fb" ? "Facebook" : "WhatsApp"} de la liga`}
+            onPress={() => Linking.openURL(r.url).catch(() => {})}
+            style={({ pressed }) => [styles.red, pressed && { opacity: 0.7 }]}
+          >
+            <Ionicons name={r.icono} size={18} color="#fff" />
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+}
+
 function TarjetaLiga({ liga, mio }: { liga: Organization; mio: MiEquipo | null }) {
   const styles = useStyles();
   const s = liga.stats;
@@ -624,6 +679,7 @@ function TarjetaLiga({ liga, mio }: { liga: Organization; mio: MiEquipo | null }
             {s.torneos} {s.torneos === 1 ? "torneo activo" : "torneos activos"}
           </Text>
         ) : null}
+        <ContactoLiga liga={liga} />
         {mio ? (
           <View style={styles.atajos}>
             {ATAJOS.map((a) => (
@@ -813,6 +869,27 @@ const useStyles = makeStyles((colors) => ({
     paddingVertical: 9,
   },
   atajoTxt: { color: "#fff", fontSize: 12, fontWeight: "800" },
+  contacto: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+    marginTop: spacing.md,
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255,255,255,.2)",
+  },
+  contactoQuien: { flexDirection: "row", alignItems: "center", gap: 6, flex: 1, minWidth: 0 },
+  contactoEtiqueta: { color: "rgba(255,255,255,.65)", fontSize: 9.5, fontWeight: "800", letterSpacing: 1 },
+  contactoNombre: { color: "#fff", fontSize: 13, fontWeight: "800" },
+  contactoRedes: { flexDirection: "row", gap: 6, marginLeft: "auto" },
+  red: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: "rgba(255,255,255,.18)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   liga: { height: 330, borderRadius: 24, padding: spacing.lg, overflow: "hidden" },
   ligaBrillo: {
     position: "absolute",
