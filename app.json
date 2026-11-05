@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "MarcaGol",
+    "slug": "marcagol-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "marcagol",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#0A0E12",
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 340,
+          "resizeMode": "contain",
+          "backgroundColor": "#0B2B1A"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "MarcaGol necesita acceso a tus fotos para que puedas elegir el logo de tu equipo."
+        }
+      ],
+      "expo-secure-store",
+      "expo-status-bar",
+      "expo-font"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.marcagol.app"
+    },
+    "android": {
+      "package": "com.marcagol.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0B2B1A",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
