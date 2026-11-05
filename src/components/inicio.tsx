@@ -263,6 +263,18 @@ interface DatosJugador {
   number: number | null;
   position: string | null;
   lugarGoleo: number | null;
+  // Solo para porteros (cifras del equipo: aún no se registra quién jugó)
+  portero: {
+    invictas: number;
+    recibidos: number;
+    jugados: number;
+    lugarDefensa: number | null;
+  } | null;
+}
+
+// "Portero", "Arquero", "Guardameta"... (la posición es texto libre)
+export function esPortero(posicion: string | null | undefined) {
+  return !!posicion && /porter|arquer|guardamet|^por$|^gk$/i.test(posicion.trim());
 }
 
 export function MiJugadorCard({ equipo }: { equipo: MiEquipo }) {
@@ -279,14 +291,38 @@ export function MiJugadorCard({ equipo }: { equipo: MiEquipo }) {
 
   useEffect(() => {
     let vivo = true;
-    Promise.all([api.getTeamDetail(equipo.teamId), api.getGoleadores(equipo.tenantSlug)])
-      .then(([detalle, goleo]) => {
+    Promise.all([
+      api.getTeamDetail(equipo.teamId),
+      api.getGoleadores(equipo.tenantSlug),
+      api.getStandings(equipo.tenantSlug).catch(() => null),
+    ])
+      .then(([detalle, goleo, tabla]) => {
         if (!vivo) return;
         const p = detalle.players.find((x) => x.id === yo.id);
         const goles = p?.goals ?? 0;
         // Lugar compartido en empates: 1 + cuántos tienen más goles
         const lugar = 1 + goleo.players.filter((x) => x.goals > goles).length;
+
+        let portero: DatosJugador["portero"] = null;
+        if (esPortero(p?.position)) {
+          const jugados = detalle.matches.length;
+          const recibidos = detalle.stats.ga;
+          // Mejor defensa = menos goles recibidos (entre equipos que ya jugaron)
+          const conPartidos = tabla?.standings.filter((s) => s.pj > 0) ?? [];
+          const lugarDefensa =
+            jugados > 0 && conPartidos.length > 1
+              ? 1 + conPartidos.filter((s) => s.ga < recibidos).length
+              : null;
+          portero = {
+            invictas: detalle.matches.filter((m) => (m.opponentScore ?? 0) === 0).length,
+            recibidos,
+            jugados,
+            lugarDefensa,
+          };
+        }
+
         setDatos({
+          portero,
           goals: p?.goals ?? 0,
           assists: p?.assists ?? 0,
           yellow: p?.yellow ?? 0,
@@ -348,7 +384,26 @@ export function MiJugadorCard({ equipo }: { equipo: MiEquipo }) {
           </View>
         </View>
 
-        {datos?.lugarGoleo ? (
+        {datos?.portero ? (
+          <View style={styles.jugGoleo}>
+            <Ionicons
+              name={datos.portero.lugarDefensa === 1 ? "shield-checkmark" : "hand-left"}
+              size={14}
+              color="#F5B942"
+            />
+            <Text style={styles.jugGoleoTxt}>
+              {datos.portero.jugados === 0
+                ? "¡A cuidar el arco desde el primer partido!"
+                : datos.portero.lugarDefensa === 1
+                ? "¡Tu equipo es la mejor defensa del torneo!"
+                : datos.portero.lugarDefensa
+                ? `${datos.portero.lugarDefensa}° mejor defensa del torneo`
+                : datos.portero.invictas > 0
+                ? `¡${datos.portero.invictas} ${datos.portero.invictas === 1 ? "portería" : "porterías"} en cero!`
+                : "¡El siguiente partido, portería en cero!"}
+            </Text>
+          </View>
+        ) : datos?.lugarGoleo ? (
           <View style={styles.jugGoleo}>
             <Ionicons name="trophy" size={14} color="#F5B942" />
             <Text style={styles.jugGoleoTxt}>
@@ -359,6 +414,34 @@ export function MiJugadorCard({ equipo }: { equipo: MiEquipo }) {
 
         {!datos && !error ? (
           <ActivityIndicator color="#fff" style={{ marginVertical: spacing.md }} />
+        ) : datos?.portero ? (
+          <View style={styles.jugStats}>
+            <View style={styles.jugStat}>
+              <Text style={[styles.jugNum, { color: "#4ADE80" }]}>{datos.portero.invictas}</Text>
+              <Text style={styles.jugNumTxt}>en cero</Text>
+            </View>
+            <View style={styles.jugStat}>
+              <Text style={styles.jugNum}>{datos.portero.recibidos}</Text>
+              <Text style={styles.jugNumTxt}>recibidos</Text>
+            </View>
+            <View style={styles.jugStat}>
+              <Text style={styles.jugNum}>
+                {datos.portero.jugados
+                  ? (datos.portero.recibidos / datos.portero.jugados).toFixed(1)
+                  : "—"}
+              </Text>
+              <Text style={styles.jugNumTxt}>por partido</Text>
+            </View>
+            <View style={styles.jugStat}>
+              <View style={styles.jugTarjetaFila}>
+                <View style={[styles.tarjeta, { backgroundColor: "#F2C230" }]} />
+                <Text style={styles.jugNum}>{datos.yellow}</Text>
+                <View style={[styles.tarjeta, { backgroundColor: "#E5383B", marginLeft: 4 }]} />
+                <Text style={styles.jugNum}>{datos.red}</Text>
+              </View>
+              <Text style={styles.jugNumTxt}>tarjetas</Text>
+            </View>
+          </View>
         ) : (
           <View style={styles.jugStats}>
             <View style={styles.jugStat}>
