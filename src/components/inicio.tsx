@@ -8,7 +8,7 @@
 // - SigueATuEquipo: invitación a elegir equipo cuando aún no hay uno.
 // - LigasDeck: tarjetas grandes por liga que se pasan deslizando. La de tu
 //   liga va primero y entra directo a tu torneo.
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
@@ -18,7 +18,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { api } from "../api/client";
 import type { Match, Organization } from "../types/api";
@@ -289,7 +289,9 @@ export function MiJugadorCard({ equipo }: { equipo: MiEquipo }) {
     Animated.spring(entrada, { toValue: 1, useNativeDriver: true, friction: 7, tension: 60 }).start();
   }, [entrada]);
 
-  useEffect(() => {
+  // Se recarga cada vez que vuelves al inicio (p. ej. tras cambiar tu
+  // posición o foto), no solo al abrir la app
+  useFocusEffect(useCallback(() => {
     let vivo = true;
     Promise.all([
       api.getTeamDetail(equipo.teamId),
@@ -337,7 +339,7 @@ export function MiJugadorCard({ equipo }: { equipo: MiEquipo }) {
     return () => {
       vivo = false;
     };
-  }, [equipo.teamId, equipo.tenantSlug, yo.id, yo.photo, yo.number]);
+  }, [equipo.teamId, equipo.tenantSlug, yo.id, yo.photo, yo.number]));
 
   const color = crestColor(equipo.teamName);
   const numero = datos?.number ?? yo.number;
