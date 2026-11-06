@@ -76,6 +76,8 @@ export interface Match {
   homeTeam: Team;
   awayTeam: Team;
   referee: { name: string } | null;
+  /** MarcaGol TV: link de YouTube del partido; puede faltar. */
+  videoUrl?: string | null;
 }
 
 export interface Membership {
@@ -255,6 +257,8 @@ export interface MatchEventsResponse {
 export interface PlayerMatchEvent {
   type: EventType;
   minute: number;
+  /** MarcaGol TV: clip de la jugada; puede faltar. */
+  clipUrl?: string | null;
 }
 
 export interface PlayerMatch {
@@ -266,6 +270,36 @@ export interface PlayerMatch {
   homeTeam: { id: string; name: string };
   awayTeam: { id: string; name: string };
   events: PlayerMatchEvent[];
+  videoUrl?: string | null;
+}
+
+// ---- Detalle público de un partido (MarcaGol TV) ----
+
+export interface PartidoEvento {
+  id: string;
+  /** Las asistencias capturadas en la web llegan como "SUBSTITUTION" */
+  type: EventType | "SUBSTITUTION";
+  minute: number;
+  clipUrl: string | null;
+  player: { id: string; name: string; number: number | null };
+  teamId: string;
+}
+
+export interface PartidoResponse {
+  match: {
+    id: string;
+    date: string;
+    status: MatchStatus;
+    homeScore: number | null;
+    awayScore: number | null;
+    cancha: number | null;
+    videoUrl: string | null;
+    homeTeam: Team;
+    awayTeam: Team;
+    tenant: { name: string; slug: string };
+    round: string | null;
+  };
+  events: PartidoEvento[];
 }
 
 export interface PlayerMatchesResponse {

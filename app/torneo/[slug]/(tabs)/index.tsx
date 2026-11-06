@@ -100,6 +100,7 @@ export default function InicioScreen() {
                   awayTeam={m.awayTeam}
                   homeScore={m.homeScore}
                   awayScore={m.awayScore}
+                  onPress={() => router.push(`/partido/${m.id}`)}
                   detail={`${formatFechaCorta(m.date)}${m.cancha ? ` · Cancha ${m.cancha}` : ""}`}
                 />
               </View>
@@ -123,6 +124,7 @@ export default function InicioScreen() {
                   awayTeam={m.awayTeam}
                   homeScore={m.homeScore}
                   awayScore={m.awayScore}
+                  onPress={() => router.push(`/partido/${m.id}`)}
                   detail={formatFechaCorta(m.date)}
                 />
               </View>

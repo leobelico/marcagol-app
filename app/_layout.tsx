@@ -37,6 +37,7 @@ function AppStack() {
           name="bienvenida"
           options={{ headerShown: false, presentation: "fullScreenModal", gestureEnabled: false }}
         />
+        <Stack.Screen name="partido/[matchId]" options={{ title: "Partido" }} />
         <Stack.Screen
           name="organizacion/[slug]"
           options={{ title: "Torneos" }}

@@ -3,6 +3,7 @@
 // Partidos del torneo agrupados por día, al estilo app de resultados.
 import { type ComponentRef, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
+import { router } from "expo-router";
 import { api } from "../../../../src/api/client";
 import type { Match } from "../../../../src/types/api";
 import { useTorneoSlug } from "../../../../src/context/TorneoContext";
@@ -83,6 +84,8 @@ export default function CalendarioScreen() {
                   awayTeam={m.awayTeam}
                   homeScore={m.homeScore}
                   awayScore={m.awayScore}
+                  video={!!m.videoUrl}
+                  onPress={() => router.push(`/partido/${m.id}`)}
                   detail={[
                     m.cancha ? `Cancha ${m.cancha}` : null,
                     m.referee ? `Árbitro: ${m.referee.name}` : null,

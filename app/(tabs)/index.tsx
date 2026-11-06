@@ -16,6 +16,7 @@ import {
   LigasDeck,
   MiEquipoCard,
   MiJugadorCard,
+  ProximamenteTV,
   SigueATuEquipo,
 } from "../../src/components/inicio";
 import { radius, spacing, typography } from "../../src/theme/tokens";
@@ -151,6 +152,10 @@ export default function InicioScreen() {
       {!error && ligas && ligas.length > 1 && (
         <Text style={styles.ayuda}>Desliza para ver más ligas</Text>
       )}
+
+      <View style={[styles.seccion, { paddingTop: spacing.xl }]}>
+        <ProximamenteTV />
+      </View>
     </ScrollView>
   );
 }

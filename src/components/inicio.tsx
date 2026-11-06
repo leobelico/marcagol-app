@@ -476,6 +476,42 @@ export function MiJugadorCard({ equipo }: { equipo: MiEquipo }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────────
+// MarcaGol TV (próximamente)
+// ─────────────────────────────────────────────────────────────
+
+export function ProximamenteTV() {
+  const styles = useStyles();
+  return (
+    <Pressable
+      onPress={() => Linking.openURL("https://marcagol.site/#tv").catch(() => {})}
+      accessibilityLabel="MarcaGol TV, próximamente. Ver más"
+      style={({ pressed }) => [styles.tv, pressed && { opacity: 0.9 }]}
+    >
+      <View style={styles.tvVideo}>
+        <Cancha opacidad={0.35} />
+        <View style={styles.tvBug}>
+          <Text style={styles.tvBugEq}>HAL</Text>
+          <Text style={styles.tvBugSc}>2-1</Text>
+          <Text style={styles.tvBugEq}>CUM</Text>
+        </View>
+        <View style={styles.tvPlay}>
+          <Ionicons name="play" size={20} color="#fff" style={{ marginLeft: 2 }} />
+        </View>
+      </View>
+      <View style={styles.tvTexto}>
+        <View style={styles.tvChip}>
+          <Text style={styles.tvChipTxt}>PRÓXIMAMENTE</Text>
+        </View>
+        <Text style={styles.tvTitulo}>MarcaGol TV</Text>
+        <Text style={styles.tvDesc}>
+          Partidos en vivo desde la cancha y cada gol en un clip para compartir.
+        </Text>
+      </View>
+    </Pressable>
+  );
+}
+
 export function SigueATuEquipo() {
   const styles = useStyles();
   const { colors } = useTheme();
@@ -869,6 +905,54 @@ const useStyles = makeStyles((colors) => ({
     paddingVertical: 9,
   },
   atajoTxt: { color: "#fff", fontSize: 12, fontWeight: "800" },
+  tv: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.md,
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    borderRadius: 18,
+    padding: spacing.sm + 2,
+  },
+  tvVideo: {
+    width: 120,
+    aspectRatio: 16 / 10,
+    borderRadius: 12,
+    overflow: "hidden",
+    backgroundColor: "#2a7d43",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tvBug: {
+    position: "absolute",
+    top: 6,
+    left: 6,
+    flexDirection: "row",
+    borderRadius: 4,
+    overflow: "hidden",
+  },
+  tvBugEq: { backgroundColor: "#0d1530", color: "#fff", fontSize: 8.5, fontWeight: "800", paddingHorizontal: 3, paddingVertical: 1 },
+  tvBugSc: { backgroundColor: "#fff", color: "#0d1530", fontSize: 8.5, fontWeight: "800", paddingHorizontal: 3, paddingVertical: 1 },
+  tvPlay: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: "rgba(0,0,0,.55)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tvTexto: { flex: 1, minWidth: 0, gap: 3, paddingRight: spacing.xs },
+  tvChip: {
+    alignSelf: "flex-start",
+    backgroundColor: colors.accentSoft,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  tvChipTxt: { color: colors.accent, fontSize: 9.5, fontWeight: "800", letterSpacing: 0.8 },
+  tvTitulo: { color: colors.text, fontSize: 16, fontWeight: "800" },
+  tvDesc: { ...typography.caption, color: colors.textMuted, lineHeight: 15 },
   contacto: {
     flexDirection: "row",
     alignItems: "center",

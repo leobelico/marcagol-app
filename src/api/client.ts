@@ -24,6 +24,7 @@ import type {
   MatchPlayersResponse,
   MatchEventsResponse,
   PlayerMatchesResponse,
+  PartidoResponse,
   EventType,
   TorneoAdminResponse,
   LandingData,
@@ -210,6 +211,16 @@ export const api = {
 
   getPlayerMatches: (playerId: string) =>
     fetchJson<PlayerMatchesResponse>(`/jugador/${playerId}/partidos`),
+
+  // MarcaGol TV
+  getPartido: (matchId: string) => fetchJson<PartidoResponse>(`/partido/${matchId}`),
+
+  setMatchVideo: (token: string, matchId: string, videoUrl: string) =>
+    fetchJson<{ match: { id: string; videoUrl: string | null } }>(`/admin/partido/${matchId}/video`, {
+      method: "PATCH",
+      headers: authHeaders(token),
+      body: JSON.stringify({ videoUrl }),
+    }),
 
   getTeamDetail: (teamId: string) =>
     fetchJson<TeamDetailResponse>(`/equipo/${teamId}`),

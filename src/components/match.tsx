@@ -3,6 +3,7 @@
 // Piezas de "app de resultados": escudo de equipo, fila de partido
 // (hora/estado · equipos · marcador) y racha de últimos resultados.
 import { Image, Pressable, Text, View } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import type { MatchStatus } from "../types/api";
 import { radius, spacing } from "../theme/tokens";
 import { makeStyles, useTheme } from "../theme/ThemeContext";
@@ -94,6 +95,7 @@ export function MatchRow({
   awayScore,
   detail,
   onPress,
+  video,
 }: {
   date: string;
   status: MatchStatus;
@@ -104,6 +106,8 @@ export function MatchRow({
   /** Texto pequeño bajo los equipos (cancha, árbitro...) */
   detail?: string;
   onPress?: () => void;
+  /** MarcaGol TV: el partido tiene video */
+  video?: boolean;
 }) {
   const styles = useStyles();
   const live = status === "LIVE";
@@ -144,6 +148,11 @@ export function MatchRow({
         </View>
         {detail ? <Text style={styles.detail} numberOfLines={1}>{detail}</Text> : null}
       </View>
+      {video ? (
+        <View style={styles.videoIco} accessibilityLabel="Tiene video">
+          <Ionicons name="play" size={10} color="#fff" style={{ marginLeft: 1 }} />
+        </View>
+      ) : null}
       {hayMarcador && (
         <View style={styles.scores}>
           <Text style={[styles.score, live && styles.live, homeLose && styles.lose]}>{hs}</Text>
@@ -197,6 +206,15 @@ const useStyles = makeStyles((colors) => ({
   win: { fontWeight: "700" },
   lose: { color: colors.textMuted },
   detail: { fontSize: 11, color: colors.textMuted, marginTop: 1 },
+  videoIco: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: colors.live,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 8,
+  },
   scores: { gap: 6, alignItems: "flex-end" },
   score: {
     fontSize: 15,

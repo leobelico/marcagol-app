@@ -12,6 +12,7 @@ import {
   Pressable,
   ScrollView,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
@@ -90,6 +91,11 @@ export default function CapturarResultadoScreen() {
   const [pickerStep, setPickerStep] = useState<"player" | "type" | "castigo">("player");
   const [selectedPlayer, setSelectedPlayer] = useState<MatchPlayer | null>(null);
 
+  // MarcaGol TV: link de YouTube del partido
+  const [video, setVideo] = useState("");
+  const [videoGuardado, setVideoGuardado] = useState("");
+  const [guardandoVideo, setGuardandoVideo] = useState(false);
+
   useFocusEffect(
     useCallback(() => {
       if (!token || !matchId) return;
@@ -98,6 +104,13 @@ export default function CapturarResultadoScreen() {
         .getMatchEvents(token, matchId)
         .then((res) => setEvents(res.events))
         .catch(() => setEvents([]));
+      api
+        .getPartido(matchId)
+        .then((res) => {
+          setVideo(res.match.videoUrl ?? "");
+          setVideoGuardado(res.match.videoUrl ?? "");
+        })
+        .catch(() => {});
     }, [token, matchId])
   );
 
@@ -117,6 +130,25 @@ export default function CapturarResultadoScreen() {
       Alert.alert("Error", message);
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function guardarVideo() {
+    if (!token || !matchId) return;
+    setGuardandoVideo(true);
+    try {
+      const res = await api.setMatchVideo(token, matchId, video.trim());
+      setVideo(res.match.videoUrl ?? "");
+      setVideoGuardado(res.match.videoUrl ?? "");
+      Alert.alert(
+        res.match.videoUrl ? "Video guardado" : "Video quitado",
+        res.match.videoUrl ? "Ya se ve en la app y en la página de la liga." : undefined
+      );
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : "No se pudo guardar el video";
+      Alert.alert("Error", message);
+    } finally {
+      setGuardandoVideo(false);
     }
   }
 
@@ -241,6 +273,43 @@ export default function CapturarResultadoScreen() {
         )}
       </View>
 
+      <Text style={[styles.sectionTitle, { marginTop: spacing.xl, marginBottom: spacing.sm }]}>
+        VIDEO DEL PARTIDO
+      </Text>
+      <View style={[styles.card, { padding: spacing.md, gap: spacing.sm }]}>
+        <Text style={styles.eventType}>
+          Pega el link de YouTube (transmisión en vivo o grabación). Se verá en la app y en la página de la liga.
+        </Text>
+        <TextInput
+          value={video}
+          onChangeText={setVideo}
+          placeholder="https://youtube.com/live/..."
+          placeholderTextColor={colors.textMuted}
+          autoCapitalize="none"
+          autoCorrect={false}
+          keyboardType="url"
+          accessibilityLabel="Link del video del partido"
+          style={styles.videoInput}
+        />
+        <Pressable
+          onPress={guardarVideo}
+          disabled={guardandoVideo || video.trim() === videoGuardado}
+          style={({ pressed }) => [
+            styles.videoBtn,
+            (guardandoVideo || video.trim() === videoGuardado) && { opacity: 0.5 },
+            pressed && { opacity: 0.8 },
+          ]}
+        >
+          {guardandoVideo ? (
+            <ActivityIndicator color={colors.onAccent} />
+          ) : (
+            <Text style={styles.videoBtnTxt}>
+              {video.trim() === "" && videoGuardado ? "Quitar video" : "Guardar video"}
+            </Text>
+          )}
+        </Pressable>
+      </View>
+
       <Pressable onPress={() => router.back()} style={styles.cancelButton}>
         <Text style={styles.cancelButtonText}>Cerrar</Text>
       </Pressable>
@@ -340,6 +409,23 @@ export default function CapturarResultadoScreen() {
 }
 
 const useStyles = makeStyles((colors) => ({
+  videoInput: {
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    backgroundColor: colors.bg,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 2,
+    color: colors.text,
+    fontSize: 14,
+  },
+  videoBtn: {
+    backgroundColor: colors.accent,
+    borderRadius: radius.md,
+    paddingVertical: spacing.sm + 4,
+    alignItems: "center",
+  },
+  videoBtnTxt: { color: colors.onAccent, fontWeight: "800", fontSize: 14 },
   container: { flex: 1, backgroundColor: colors.bg },
   content: { padding: spacing.xl, paddingBottom: spacing.xxl },
   title: {

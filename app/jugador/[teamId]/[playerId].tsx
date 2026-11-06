@@ -9,6 +9,8 @@ import { router, useLocalSearchParams } from "expo-router";
 import { api } from "../../../src/api/client";
 import type { TeamDetailPlayer, PlayerMatch } from "../../../src/types/api";
 import { LoadingState, ErrorState } from "../../../src/components/AsyncState";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { abrirVideo } from "../../../src/utils/video";
 import { radius, spacing, typography } from "../../../src/theme/tokens";
 import { makeStyles, useTheme } from "../../../src/theme/ThemeContext";
 
@@ -23,6 +25,29 @@ function formatFecha(iso: string) {
     day: "numeric",
     month: "short",
     timeZone: "America/Mexico_City",
+  });
+}
+
+// Jugadas del jugador que tienen clip, de la más reciente a la más vieja
+function clips(matches: PlayerMatch[]) {
+  const nombres: Record<string, string> = {
+    GOAL: "Gol",
+    ASSIST: "Asistencia",
+    SUBSTITUTION: "Asistencia",
+    YELLOW_CARD: "Amarilla",
+    RED_CARD: "Roja",
+  };
+  return matches.flatMap((m) => {
+    const rival = m.isHome ? m.awayTeam.name : m.homeTeam.name;
+    return m.events
+      .filter((e) => !!e.clipUrl)
+      .map((e) => ({
+        matchId: m.id,
+        url: e.clipUrl!,
+        titulo: `${nombres[e.type] ?? "Jugada"} vs ${rival}`,
+        fecha: m.date,
+        minuto: e.minute,
+      }));
   });
 }
 
@@ -133,6 +158,38 @@ export default function JugadorScreen() {
         <StatCard label="Rojas" value={player.red} color={colors.loss} />
       </View>
 
+      {/* MarcaGol TV: sus jugadas con clip */}
+      {matches && clips(matches).length > 0 && (
+        <>
+          <Text style={styles.sectionTitle}>JUGADAS EN VIDEO</Text>
+          <View style={[styles.card, { marginBottom: spacing.xl }]}>
+            {clips(matches).map((c, i, todos) => (
+              <Pressable
+                key={`${c.matchId}-${i}`}
+                onPress={() => abrirVideo(c.url)}
+                accessibilityLabel={`Ver clip: ${c.titulo}`}
+                style={({ pressed }) => [
+                  styles.clipRow,
+                  i < todos.length - 1 && styles.rowDivider,
+                  pressed && { opacity: 0.7 },
+                ]}
+              >
+                <View style={styles.clipPlay}>
+                  <Ionicons name="play" size={14} color="#fff" style={{ marginLeft: 2 }} />
+                </View>
+                <View style={{ flex: 1, minWidth: 0 }}>
+                  <Text style={styles.matchOpponent} numberOfLines={1}>{c.titulo}</Text>
+                  <Text style={styles.matchDate}>
+                    {formatFecha(c.fecha)} · minuto {c.minuto}
+                  </Text>
+                </View>
+                <Ionicons name="logo-youtube" size={18} color={colors.textMuted} />
+              </Pressable>
+            ))}
+          </View>
+        </>
+      )}
+
       <Text style={styles.sectionTitle}>PARTIDOS</Text>
       <View style={styles.card}>
         {!matches ? (
@@ -143,16 +200,19 @@ export default function JugadorScreen() {
           matches.map((m, i) => {
             const opponent = m.isHome ? m.awayTeam : m.homeTeam;
             return (
-              <View
+              <Pressable
                 key={m.id}
-                style={[
+                onPress={() => router.push(`/partido/${m.id}`)}
+                style={({ pressed }) => [
                   styles.matchRow,
                   i < matches.length - 1 && styles.rowDivider,
+                  pressed && { opacity: 0.7 },
                 ]}
               >
                 <View style={styles.matchTop}>
                   <Text style={styles.matchOpponent} numberOfLines={1}>
                     {m.isHome ? "vs" : "@"} {opponent.name}
+                    {m.videoUrl ? "  ▶" : ""}
                   </Text>
                   <Text style={styles.matchScore}>
                     {m.homeScore} - {m.awayScore}
@@ -162,7 +222,7 @@ export default function JugadorScreen() {
                   <Text style={styles.matchDate}>{formatFecha(m.date)}</Text>
                   <EventIcons events={m.events} />
                 </View>
-              </View>
+              </Pressable>
             );
           })
         )}
@@ -190,6 +250,20 @@ function StatCard({
 }
 
 const useStyles = makeStyles((colors) => ({
+  clipRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.md,
+    padding: spacing.md,
+  },
+  clipPlay: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: colors.live,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   container: { flex: 1, backgroundColor: colors.bg },
   content: { padding: spacing.lg, paddingBottom: spacing.xxl },
   header: { alignItems: "center", marginBottom: spacing.xl },
