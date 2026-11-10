@@ -60,7 +60,7 @@ function Cancha({ opacidad = 0.22 }: { opacidad?: number }) {
 
 // Colores de portada por liga: tonos profundos para que el texto blanco
 // siempre se lea. Se elige uno fijo según el nombre.
-const PORTADAS = ["#13306A", "#0A6B4B", "#4C2390", "#7A3B12", "#8F1A4A", "#0E5A73", "#5A3A1F", "#2A3F8F"];
+const PORTADAS = ["#1C6B37", "#0A6B4B", "#4C2390", "#7A3B12", "#8F1A4A", "#0E5A73", "#5A3A1F", "#2A3F8F"];
 export function colorLiga(nombre: string) {
   let h = 0;
   for (let i = 0; i < nombre.length; i++) h = (h * 31 + nombre.charCodeAt(i)) >>> 0;
@@ -829,7 +829,7 @@ const useStyles = makeStyles((colors) => ({
     padding: spacing.lg,
     paddingTop: spacing.lg + 6,
     overflow: "hidden",
-    backgroundColor: "#0E1430",
+    backgroundColor: "#0C1A11",
     gap: spacing.md,
   },
   jugFranja: { position: "absolute", top: 0, left: 0, right: 0, height: 6 },
@@ -932,8 +932,8 @@ const useStyles = makeStyles((colors) => ({
     borderRadius: 4,
     overflow: "hidden",
   },
-  tvBugEq: { backgroundColor: "#0d1530", color: "#fff", fontSize: 8.5, fontWeight: "800", paddingHorizontal: 3, paddingVertical: 1 },
-  tvBugSc: { backgroundColor: "#fff", color: "#0d1530", fontSize: 8.5, fontWeight: "800", paddingHorizontal: 3, paddingVertical: 1 },
+  tvBugEq: { backgroundColor: "#12261a", color: "#fff", fontSize: 8.5, fontWeight: "800", paddingHorizontal: 3, paddingVertical: 1 },
+  tvBugSc: { backgroundColor: "#fff", color: "#12261a", fontSize: 8.5, fontWeight: "800", paddingHorizontal: 3, paddingVertical: 1 },
   tvPlay: {
     width: 34,
     height: 34,
@@ -1003,7 +1003,7 @@ const useStyles = makeStyles((colors) => ({
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
-  ligaVivoPunto: { width: 7, height: 7, borderRadius: 4, backgroundColor: "#FFB020" },
+  ligaVivoPunto: { width: 7, height: 7, borderRadius: 4, backgroundColor: "#FFD400" },
   ligaVivoTxt: { color: "#fff", fontSize: 11, fontWeight: "800" },
   ligaNombre: { color: "#fff", fontSize: 28, fontWeight: "800", letterSpacing: -0.6, lineHeight: 31 },
   ligaMeta: { color: "rgba(255,255,255,.8)", fontSize: 12.5, fontWeight: "600", marginTop: 4 },

@@ -4,8 +4,14 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider, useTheme } from "../src/theme/ThemeContext";
 import { AuthProvider } from "../src/context/AuthContext";
+import { useFonts, BigShoulders_800ExtraBold, BigShoulders_900Black } from "@expo-google-fonts/big-shoulders";
 
 export default function RootLayout() {
+  // Fuente condensada de marcadores y títulos (tema Llano). Si falla la
+  // carga, la app sigue con la fuente del sistema.
+  const [fuentesListas, errorFuentes] = useFonts({ BigShoulders_800ExtraBold, BigShoulders_900Black });
+  if (!fuentesListas && !errorFuentes) return null;
+
   return (
     <ThemeProvider>
       <AuthProvider>
