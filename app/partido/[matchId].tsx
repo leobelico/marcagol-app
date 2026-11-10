@@ -1,6 +1,6 @@
 // app/partido/[matchId].tsx
 //
-// Detalle de un partido: marcador, video (MarcaGol TV) y jugadas. Si el
+// Detalle de un partido: marcador, video (Tlachtli TV) y jugadas. Si el
 // partido tiene video, se muestra su miniatura y al tocarla se abre en
 // YouTube. Las jugadas con clip tienen botón "Ver".
 import { useCallback, useState } from "react";
@@ -150,7 +150,7 @@ export default function PartidoScreen() {
           <View style={styles.sinVideo}>
             <Ionicons name="videocam-outline" size={20} color={colors.textMuted} />
             <Text style={styles.sinVideoTxt}>
-              Este partido no tiene video. Con MarcaGol TV las canchas tendrán cámara y cada gol su clip.
+              Este partido no tiene video. Con Tlachtli TV las canchas tendrán cámara y cada gol su clip.
             </Text>
           </View>
         )}

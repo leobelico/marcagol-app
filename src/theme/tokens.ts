@@ -1,6 +1,6 @@
 // src/theme/tokens.ts
 //
-// Sistema de diseño de MarcaGol Mobile, tema «Llano» (igual que la web):
+// Sistema de diseño de Tlachtli Mobile, tema «Llano» (igual que la web):
 // - Claro: cal (#EEF1EA), tarjetas blancas, tinta verde, acento pasto (#1C6B37).
 // - Oscuro: noche de cancha (#0C1A11), acento pasto claro (#62D68D) y
 //   amarillo tarjeta (#FFD400) para «en vivo».

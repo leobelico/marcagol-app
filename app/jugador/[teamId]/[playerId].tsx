@@ -158,7 +158,7 @@ export default function JugadorScreen() {
         <StatCard label="Rojas" value={player.red} color={colors.loss} />
       </View>
 
-      {/* MarcaGol TV: sus jugadas con clip */}
+      {/* Tlachtli TV: sus jugadas con clip */}
       {matches && clips(matches).length > 0 && (
         <>
           <Text style={styles.sectionTitle}>JUGADAS EN VIDEO</Text>

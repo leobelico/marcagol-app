@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "MarcaGol",
+    "name": "Tlachtli",
     "slug": "marcagol-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "marcagol",
     "userInterfaceStyle": "automatic",
-    "backgroundColor": "#0A0E12",
+    "backgroundColor": "#0C1A11",
     "plugins": [
       "expo-router",
       [
@@ -16,13 +16,13 @@
           "image": "./assets/splash-icon.png",
           "imageWidth": 340,
           "resizeMode": "contain",
-          "backgroundColor": "#0B2B1A"
+          "backgroundColor": "#1C6B37"
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "MarcaGol necesita acceso a tus fotos para que puedas elegir el logo de tu equipo."
+          "photosPermission": "Tlachtli necesita acceso a tus fotos para que puedas elegir el logo de tu equipo."
         }
       ],
       "expo-secure-store",
@@ -36,7 +36,7 @@
     "android": {
       "package": "com.marcagol.app",
       "adaptiveIcon": {
-        "backgroundColor": "#0B2B1A",
+        "backgroundColor": "#1C6B37",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"

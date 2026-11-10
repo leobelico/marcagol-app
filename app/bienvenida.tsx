@@ -221,7 +221,7 @@ export default function BienvenidaScreen() {
     (paso === "jugador" && !!jugador);
 
   const titulo = {
-    rol: "¡Bienvenido a MarcaGol! ¿Quién eres?",
+    rol: "¡Bienvenido a Tlachtli! ¿Quién eres?",
     liga: rol === "jugador" ? "¿En qué liga juegas?" : "¿A qué liga le vas?",
     torneo: "¿Qué torneo?",
     equipo: rol === "jugador" ? "¿En qué equipo juegas?" : "Elige a tu equipo",

@@ -212,7 +212,7 @@ export const api = {
   getPlayerMatches: (playerId: string) =>
     fetchJson<PlayerMatchesResponse>(`/jugador/${playerId}/partidos`),
 
-  // MarcaGol TV
+  // Tlachtli TV
   getPartido: (matchId: string) => fetchJson<PartidoResponse>(`/partido/${matchId}`),
 
   setMatchVideo: (token: string, matchId: string, videoUrl: string) =>

@@ -76,7 +76,7 @@ export interface Match {
   homeTeam: Team;
   awayTeam: Team;
   referee: { name: string } | null;
-  /** MarcaGol TV: link de YouTube del partido; puede faltar. */
+  /** Tlachtli TV: link de YouTube del partido; puede faltar. */
   videoUrl?: string | null;
 }
 
@@ -257,7 +257,7 @@ export interface MatchEventsResponse {
 export interface PlayerMatchEvent {
   type: EventType;
   minute: number;
-  /** MarcaGol TV: clip de la jugada; puede faltar. */
+  /** Tlachtli TV: clip de la jugada; puede faltar. */
   clipUrl?: string | null;
 }
 
@@ -273,7 +273,7 @@ export interface PlayerMatch {
   videoUrl?: string | null;
 }
 
-// ---- Detalle público de un partido (MarcaGol TV) ----
+// ---- Detalle público de un partido (Tlachtli TV) ----
 
 export interface PartidoEvento {
   id: string;

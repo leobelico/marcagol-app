@@ -91,7 +91,7 @@ export default function CapturarResultadoScreen() {
   const [pickerStep, setPickerStep] = useState<"player" | "type" | "castigo">("player");
   const [selectedPlayer, setSelectedPlayer] = useState<MatchPlayer | null>(null);
 
-  // MarcaGol TV: link de YouTube del partido
+  // Tlachtli TV: link de YouTube del partido
   const [video, setVideo] = useState("");
   const [videoGuardado, setVideoGuardado] = useState("");
   const [guardandoVideo, setGuardandoVideo] = useState(false);

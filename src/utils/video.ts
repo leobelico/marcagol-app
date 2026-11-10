@@ -1,6 +1,6 @@
 // src/utils/video.ts
 //
-// MarcaGol TV: links de video de partidos y clips. Por ahora viven en
+// Tlachtli TV: links de video de partidos y clips. Por ahora viven en
 // YouTube (en vivo o grabados); se abren en la app de YouTube.
 import { Linking } from "react-native";
 

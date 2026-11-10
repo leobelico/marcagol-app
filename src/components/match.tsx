@@ -106,7 +106,7 @@ export function MatchRow({
   /** Texto pequeño bajo los equipos (cancha, árbitro...) */
   detail?: string;
   onPress?: () => void;
-  /** MarcaGol TV: el partido tiene video */
+  /** Tlachtli TV: el partido tiene video */
   video?: boolean;
 }) {
   const styles = useStyles();

@@ -477,7 +477,7 @@ export function MiJugadorCard({ equipo }: { equipo: MiEquipo }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// MarcaGol TV (próximamente)
+// Tlachtli TV (próximamente)
 // ─────────────────────────────────────────────────────────────
 
 export function ProximamenteTV() {
@@ -485,7 +485,7 @@ export function ProximamenteTV() {
   return (
     <Pressable
       onPress={() => Linking.openURL("https://marcagol.site/#tv").catch(() => {})}
-      accessibilityLabel="MarcaGol TV, próximamente. Ver más"
+      accessibilityLabel="Tlachtli TV, próximamente. Ver más"
       style={({ pressed }) => [styles.tv, pressed && { opacity: 0.9 }]}
     >
       <View style={styles.tvVideo}>
@@ -503,7 +503,7 @@ export function ProximamenteTV() {
         <View style={styles.tvChip}>
           <Text style={styles.tvChipTxt}>PRÓXIMAMENTE</Text>
         </View>
-        <Text style={styles.tvTitulo}>MarcaGol TV</Text>
+        <Text style={styles.tvTitulo}>Tlachtli TV</Text>
         <Text style={styles.tvDesc}>
           Partidos en vivo desde la cancha y cada gol en un clip para compartir.
         </Text>
